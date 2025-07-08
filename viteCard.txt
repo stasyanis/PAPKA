@@ -1,3 +1,217 @@
+src\assets\styles\global.css
+
+/* Баннер мероприятий */
+.banner {
+  padding: 25px 5%;
+  position: relative;
+  height: 380px;
+  overflow: hidden;
+  border-radius: var(--radius);
+  margin: 0 5%;
+}
+
+.banner-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  transition: all 0.5s;
+}
+
+.banner-slide.active {
+  opacity: 1;
+}
+
+.banner-content {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  width: 100%;
+  padding: 25px;
+  color: white;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.banner-title {
+  font-size: 28px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  line-height: 1.3;
+  animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.banner-text {
+  font-size: 16px;
+  margin-bottom: 18px;
+  max-width: 600px;
+  opacity: 0.9;
+  animation: fadeInUp 0.8s 0.2s ease both;
+}
+
+.banner-btn {
+  padding: 11px 28px;
+  background: var(--white);
+  border: none;
+  border-radius: 28px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--primary);
+  animation: fadeInUp 0.8s 0.4s ease both;
+}
+
+.banner-btn:hover {
+  background: var(--light);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.banner-nav {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.banner-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.banner-dot.active {
+  background: white;
+  transform: scale(1.3);
+}
+
+.banner-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  cursor: pointer;
+  transition: var(--transition);
+  opacity: 0;
+  z-index: 20;
+  box-shadow: var(--shadow);
+}
+
+.banner:hover .banner-arrow {
+  opacity: 1;
+}
+
+.banner-arrow:hover {
+  background: var(--white);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prev-arrow {
+  left: 20px;
+}
+
+.next-arrow {
+  right: 20px;
+}
+
+.\src\components\sections\Banner.jsx
+
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+const Banner = ({ events = [] }) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  
+  useEffect(() => {
+    if (events.length === 0) return;
+    
+    const interval = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % events.length);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [events.length]);
+
+  if (events.length === 0) return null;
+
+  return (
+    <section className="banner">
+      {events.map((event, index) => (
+        <div 
+          key={event.id}
+          className={`banner-slide ${index === currentSlide ? 'active' : ''}`}
+          style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${event.image || '/placeholder.jpg'})` }}
+        >
+          <div className="banner-content">
+            <h2 className="banner-title">{event.title}</h2>
+            <p className="banner-text">{event.description?.substring(0, 100) || 'Описание мероприятия'}...</p>
+            <Link to={`/events/${event.id}`} className="banner-btn">
+              Узнать подробности
+            </Link>
+          </div>
+        </div>
+      ))}
+      
+      <div className="banner-nav">
+        {events.map((_, index) => (
+          <div 
+            key={index}
+            className={`banner-dot ${index === currentSlide ? 'active' : ''}`}
+            onClick={() => setCurrentSlide(index)}
+          ></div>
+        ))}
+      </div>
+      
+      <button 
+        className="banner-arrow prev-arrow"
+        onClick={() => setCurrentSlide(prev => (prev - 1 + events.length) % events.length)}
+      >
+        <i className="fas fa-chevron-left"></i>
+      </button>
+      
+      <button 
+        className="banner-arrow next-arrow"
+        onClick={() => setCurrentSlide(prev => (prev + 1) % events.length)}
+      >
+        <i className="fas fa-chevron-right"></i>
+      </button>
+    </section>
+  );
+};
+
+export default Banner;
+
+.\src\components\events\EventModal.jsx
+
 import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 
@@ -29,15 +243,12 @@ const CreateEventModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-  <div 
-    className={`modal-overlay ${isOpen ? 'active' : ''}`}
-    onClick={onClose}
-  >
-    <div className="modal" onClick={e => e.stopPropagation()}>
-      <div className="close-modal" onClick={onClose}>
-        <i className="fas fa-times"></i>
-      </div>
-      <div className="modal-content">
+    <div className="modal-overlay">
+      <div className="modal">
+        <div className="close-modal" onClick={onClose}>
+          <i className="fas fa-times"></i>
+        </div>
+        <div className="modal-content">
           <div className="event-editor">
             <div className="editor-header">
               <h2 className="editor-title">Создание мероприятия</h2>
@@ -223,3 +434,108 @@ const CreateEventModal = ({ isOpen, onClose }) => {
 };
 
 export default CreateEventModal;
+
+src\components\events\EventCard.jsx
+
+import { useAppContext } from '../../context/AppContext';
+
+const EventCard = ({ event, showActions = false, onEdit, onComplete }) => {
+  const { user } = useAppContext();
+  const isPast = event.isPast;
+  const hasImages = event.images && event.images.length > 0;
+
+  return (
+    <div className="event-card">
+      {hasImages && (
+        <div 
+          className="event-card-image" 
+          style={{ backgroundImage: `url(${event.images[0]})` }}
+        />
+      )}
+      
+      <div className="event-card-content">
+        <h3 className="event-card-title">{event.title}</h3>
+        
+        <div className="event-card-meta">
+          <span><i className="fas fa-calendar"></i> {event.date}</span>
+          <span><i className="fas fa-clock"></i> {event.time}</span>
+          <span><i className="fas fa-map-marker-alt"></i> {event.location}</span>
+        </div>
+        
+        <span className={`event-card-status ${isPast ? 'status-past' : 'status-upcoming'}`}>
+          {isPast ? 'Завершено' : 'Запланировано'}
+        </span>
+        
+        {showActions && !isPast && user?.role === 'teacher' && (
+          <div className="event-card-actions">
+            <button 
+              className="edit-btn" 
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit && onEdit(event);
+              }}
+            >
+              Редактировать
+            </button>
+            <button 
+              className="edit-btn" 
+              onClick={(e) => {
+                e.stopPropagation();
+                onComplete && onComplete(event);
+              }}
+              style={{ marginLeft: '8px' }}
+            >
+              Завершить
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default EventCard;
+
+.\src\components\sections\NewsSection.jsx
+
+import EventCard from '../events/EventCard';
+
+const NewsSection = ({ events = [] }) => {
+  if (events.length === 0) return null;
+
+  return (
+    <section className="news-section">
+      <h2 className="section-title">
+        <i className="fas fa-newspaper"></i> Новостная лента
+      </h2>
+      
+      <div className="news-grid">
+        {events.map(event => (
+          <div key={event.id} className="news-card">
+            {event.images && event.images.length > 0 && (
+              <div 
+                className="news-image" 
+                style={{ backgroundImage: `url(${event.images[0]})` }}
+              ></div>
+            )}
+            <div className="news-content">
+              <h3 className="news-title">{event.title}</h3>
+              <div className="news-meta">
+                <span><i className="fas fa-user"></i> {event.responsible || "Организатор"}</span>
+                <span><i className="fas fa-calendar"></i> {event.date}</span>
+              </div>
+              <p className="news-excerpt">
+                {event.report?.comment?.slice(0, 100) || 'Отчет о мероприятии...'}
+              </p>
+              <a className="news-link">
+                Читать подробнее <i className="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+export default NewsSection;

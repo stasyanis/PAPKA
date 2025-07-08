@@ -1,6 +1,6 @@
 import { useAppContext } from '../../context/AppContext';
 
-const EventCard = ({ event, showActions = false, onEdit, onComplete }) => {
+const EventCard = ({ event, showActions = false, onEdit, onComplete, onClick }) => {
   const { user } = useAppContext();
   const isPast = event.isPast;
   const hasImages = event.images && event.images.length > 0;

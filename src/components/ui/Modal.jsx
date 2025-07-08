@@ -26,11 +26,9 @@ const Modal = ({
   if (!isOpen) return null;
 
   return (
+    
     <div className="modal-overlay" onClick={onClose}>
-      <div 
-        className={`modal ${className} ${size}`} 
-        onClick={e => e.stopPropagation()}
-      >
+      <div className={`modal ${className} ${size}`} onClick={e => e.stopPropagation()}>
         {closeButton && (
           <Button 
             className="close-modal" 

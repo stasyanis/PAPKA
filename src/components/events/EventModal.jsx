@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 
-const CreateEventModal = ({ isOpen, onClose }) => {
+const EventModal = ({ event, isOpen, onClose }) => {
   const { createEvent } = useAppContext();
   const [activeTab, setActiveTab] = useState('basic');
   const [formData, setFormData] = useState({
@@ -219,4 +219,4 @@ const CreateEventModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default CreateEventModal;
+export default EventModal;

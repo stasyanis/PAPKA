@@ -11,15 +11,15 @@ const CalendarSection = ({ events }) => {
   const [eventModalOpen, setEventModalOpen] = useState(false);
 
   const handleDayClick = (day) => {
-    const dayEvents = events.filter(event => 
-      new Date(event.date).toDateString() === day.toDateString()
-    );
-    
-    if (dayEvents.length > 0) {
-      setSelectedEvent(dayEvents[0]);
-      setEventModalOpen(true);
-    }
-  };
+  const dayEvents = events.filter(event => 
+    new Date(event.date).toDateString() === day.toDateString()
+  );
+  
+  if (dayEvents.length > 0) {
+    setSelectedEvent(dayEvents[0]);
+    setEventModalOpen(true);
+  }
+};
 
   const handleNavigateEvents = (direction) => {
     const dayEvents = events.filter(event => 
@@ -44,14 +44,14 @@ const CalendarSection = ({ events }) => {
         Все события на этот месяц
       </Button>
       
-      {selectedEvent && (
-        <EventModal
-          event={selectedEvent}
-          isOpen={eventModalOpen}
-          onClose={() => setEventModalOpen(false)}
-          onNavigate={handleNavigateEvents}
-        />
-      )}
+      <EventModal
+      event={selectedEvent}
+      isOpen={selectedEvent !== null && eventModalOpen}
+      onClose={() => {
+        setEventModalOpen(false);
+        setSelectedEvent(null);
+      }}
+    />
     </section>
   );
 };
