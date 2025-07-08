@@ -1,0 +1,11 @@
+{
+    "name": "БГИТУ Афиша",
+    "short_name": "Афиша",
+    "start_url": ".",
+    "display": "standalone",
+    "content_security_policy": {
+      "extension_pages": "script-src 'self' 'unsafe-inline'; object-src 'self'"
+    },
+    "background_color": "#1a3a5a",
+    "theme_color": "#4b86b4"
+  }

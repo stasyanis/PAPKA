@@ -1,0 +1,24 @@
+/* src/assets/styles/variables.css */
+:root {
+    --primary: #1a3a5a;
+    --secondary: #2a4d69;
+    --accent: #4b86b4;
+    --light: #f0f7ff;
+    --light-gray: #f8f9fa;
+    --dark: #333;
+    --white: #ffffff;
+    --success: #4caf50;
+    --danger: #f44336;
+    --warning: #ff9800;
+    --text: #333;
+    --gray: #777;
+    --bg: #f8f9fa;
+    --concert: #e91e63;
+    --activity: #9c27b0;
+    --public: #3f51b5;
+    --competition: #009688;
+    --border: #e0e0e0;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
