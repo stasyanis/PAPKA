@@ -6,7 +6,7 @@ const EventCard = ({ event, showActions = false, onEdit, onComplete, onClick }) 
   const hasImages = event.images && event.images.length > 0;
 
   return (
-    <div className="event-card">
+    <div className="event-card" onClick={() => onClick && onClick(event)}>
       {hasImages && (
         <div 
           className="event-card-image" 
@@ -23,8 +23,8 @@ const EventCard = ({ event, showActions = false, onEdit, onComplete, onClick }) 
           <span><i className="fas fa-map-marker-alt"></i> {event.location}</span>
         </div>
         
-        <span className={`event-card-status ${isPast ? 'status-past' : 'status-upcoming'}`}>
-          {isPast ? 'Завершено' : 'Запланировано'}
+        <span className={`event-card-status ${event.isPast ? 'status-past' : 'status-upcoming'}`}>
+          {event.isPast ? 'Завершено' : 'Запланировано'}
         </span>
         
         {showActions && !isPast && user?.role === 'teacher' && (
